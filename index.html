@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio3D - Impresión 3D Personalizada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: Tecnología Confiable y Creatividad Vibrante (Azul Oscuro, Gris Neutro, Naranja Vibrante)
+    Application Structure Plan: A single-page application (SPA) structure was chosen to create a fluid, uninterrupted user journey, which is critical for guiding a potential customer from initial interest to conversion (requesting a quote). The flow is designed based on a sales funnel: 1. Hook (Hero), 2. Simplify (How it Works), 3. Inform (Services), 4. Inspire & Build Trust (Portfolio, Market Data, Testimonials), 5. Convert (Quote Form). This non-linear but guided structure is more effective than a traditional multi-page site for a service focused on custom, unique orders, as it keeps the user engaged and focused on the primary call-to-action.
+    Visualization & Content Choices: 
+    - Market Growth Chart: Report Info (Market growth from €24B to €70B by 2030) -> Goal (Build credibility, show market viability) -> Viz (Line Chart) -> Interaction (Hover for details) -> Justification (A line chart is the clearest way to show a trend over time, positioning the business as knowledgeable and serious) -> Library (Chart.js/Canvas).
+    - Business Models: Report Info (Various models like collectibles, prototypes, etc.) -> Goal (Showcase service breadth) -> Viz (Icon-based cards) -> Interaction (Static display) -> Justification (Clear, scannable way to present options) -> Method (HTML/Tailwind/Unicode).
+    - How It Works Diagram: Report Info (Typical custom order workflow) -> Goal (Reduce user friction, demystify the process) -> Viz (Numbered step-by-step diagram) -> Interaction (Static) -> Justification (Simplifies a potentially complex process, making it seem easy and accessible) -> Method (HTML/Tailwind/Unicode).
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .hero-bg {
+            /* Nuevo degradado de azul oscuro para profesionalidad y confianza */
+            /* REEMPLAZA 'placeholder-hero.jpg' con la URL REAL de tu imagen de fondo para el hero */
+            background-image: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('images/placeholder-hero.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        /* Color del enlace de navegación activo */
+        .nav-link.active {
+            color: #FF6F00; /* Naranja Vibrante */
+            font-weight: 600;
+        }
+        /* Estilo para el logo en el encabezado y pie de página */
+        .logo-img {
+            height: 40px; /* Ajusta el tamaño según sea necesario */
+            width: auto;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md fixed top-0 left-0 right-0 z-50 shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <!-- LOGO ENCABEZADO: Usar la versión oscura del logo (texto gris/negro, 3D naranja) para fondo blanco/claro -->
+            <a href="#home" class="text-2xl font-bold text-gray-900">
+                <!-- REEMPLAZA 'images/logo_studio_3d_oscuro.png' con la URL REAL de tu logo oscuro optimizado en GitHub -->
+                <img src="images/logo_studio_3d_oscuro.png" alt="Studio3D Logo Oscuro" class="logo-img" onerror="this.onerror=null; this.src='images/placeholder-logo-dark.png';">
+            </a>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="#how-it-works" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Cómo Funciona</a>
+                <a href="#services" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Servicios</a>
+                <a href="#portfolio" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Portafolio</a>
+                <a href="#market" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Mercado</a>
+                <a href="#about" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Nosotros</a>
+                <a href="#quote" class="ml-4 bg-orange-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-orange-600 transition-transform hover:scale-105">
+                    Solicitar Presupuesto
+                </a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white/90 backdrop-blur-md">
+            <a href="#how-it-works" class="block text-center py-2 px-4 text-gray-600 hover:bg-orange-50">Cómo Funciona</a>
+            <a href="#services" class="block text-center py-2 px-4 text-gray-600 hover:bg-orange-50">Servicios</a>
+            <a href="#portfolio" class="block text-center py-2 px-4 text-gray-600 hover:bg-orange-50">Portafolio</a>
+            <a href="#market" class="block text-center py-2 px-4 text-gray-600 hover:bg-orange-50">Mercado</a>
+            <a href="#about" class="block text-center py-2 px-4 text-gray-600 hover:bg-orange-50">Nosotros</a>
+            <a href="#quote" class="block text-center py-3 px-4 text-white bg-orange-500 hover:bg-orange-600">Solicitar Presupuesto</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero-bg h-screen flex items-center justify-center text-white text-center p-6 pt-20">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4">Transformamos tus Ideas en Realidad 3D</h1>
+                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Desde prototipos funcionales hasta figuras personalizadas únicas. Si puedes imaginarlo, podemos imprimirlo.</p>
+                <a href="#quote" class="bg-orange-500 text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    ¡Crea tu Pieza Ahora!
+                </a>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-2">Tu Visión, Simplificada.</h2>
+                <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">Nuestro proceso está diseñado para ser claro, rápido y colaborativo. Así damos vida a tu proyecto:</p>
+                <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div class="flex flex-col items-center p-6">
+                        <div class="bg-orange-100 text-orange-600 rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold mb-4">1</div>
+                        <h3 class="text-xl font-semibold mb-2">Envía tu Idea</h3>
+                        <p class="text-gray-600">Cuéntanos tu proyecto. Sube tus bocetos, imágenes de referencia o archivos 3D a través de nuestro formulario de presupuesto.</p>
+                    </div>
+                    <div class="flex flex-col items-center p-6">
+                        <div class="bg-orange-100 text-orange-600 rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold mb-4">2</div>
+                        <h3 class="text-xl font-semibold mb-2">Diseño y Cotización</h3>
+                        <p class="text-gray-600">Revisamos tu solicitud, te enviamos un presupuesto detallado y, si es necesario, trabajamos contigo en el diseño digital hasta que sea perfecto.</p>
+                    </div>
+                    <div class="flex flex-col items-center p-6">
+                        <div class="bg-orange-100 text-orange-600 rounded-full w-20 h-20 flex items-center justify-center text-3xl font-bold mb-4">3</div>
+                        <h3 class="text-xl font-semibold mb-2">Impresión y Entrega</h3>
+                        <p class="text-gray-600">Una vez aprobado, imprimimos tu pieza con la máxima calidad y te la enviamos directamente a tu puerta. ¡Así de fácil!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-12">Capacidades de Impresión a tu Medida</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-orange-500 mb-4">⚙️</div> <!-- Icono con Naranja Vibrante -->
+                        <h3 class="text-xl font-bold mb-2">Prototipos Funcionales</h3>
+                        <p class="text-gray-600">Valida tus diseños con prototipos precisos y funcionales. Ideal para inventores, startups y estudiantes.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-orange-500 mb-4">🗿</div> <!-- Icono con Naranja Vibrante -->
+                        <h3 class="text-xl font-bold mb-2">Figuras y Coleccionables</h3>
+                        <p class="text-gray-600">Inmortaliza tus personajes, mascotas o ideas en figuras detalladas. El regalo perfecto y único.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-orange-500 mb-4">🔧</div> <!-- Icono con Naranja Vibrante -->
+                        <h3 class="text-xl font-bold mb-2">Piezas de Repuesto</h3>
+                        <p class="text-gray-600">¿Una pieza rota o descatalogada? La diseñamos y fabricamos para extender la vida de tus objetos.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-4xl text-orange-500 mb-4">🎨</div> <!-- Icono con Naranja Vibrante -->
+                        <h3 class="text-xl font-bold mb-2">Arte y Decoración</h3>
+                        <p class="text-gray-600">Crea esculturas, litofanías o elementos decorativos que no encontrarás en ninguna otra parte.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Proyectos que Cobraron Vida</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Ejemplo de un proyecto. Reemplaza 'src' y 'alt' con tus propias imágenes y descripciones -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <!-- REEMPLAZA 'images/proyecto1.jpg' con la URL REAL de tu foto de proyecto 1 -->
+                        <img src="images/proyecto1.jpg" alt="Prototipo de Dron" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='images/placeholder-project.png';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Prototipo de Dron</p>
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <!-- REEMPLAZA 'images/proyecto2.jpg' con la URL REAL de tu foto de proyecto 2 -->
+                        <img src="images/proyecto2.jpg" alt="Figura Personalizada" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='images/placeholder-project.png';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Figura Personalizada</p>
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <!-- REEMPLAZA 'images/proyecto3.jpg' con la URL REAL de tu foto de proyecto 3 -->
+                        <img src="images/proyecto3.jpg" alt="Pieza de Repuesto" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='images/placeholder-project.png';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Pieza de Repuesto</p>
+                        </div>
+                    </div>
+                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <!-- REEMPLAZA 'images/proyecto4.jpg' con la URL REAL de tu foto de proyecto 4 -->
+                        <img src="images/proyecto4.jpg" alt="Decoración Artística" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='images/placeholder-project.png';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Decoración Artística</p>
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <!-- REEMPLAZA 'images/proyecto5.jpg' con la URL REAL de tu foto de proyecto 5 -->
+                        <img src="images/proyecto5.jpg" alt="Accesorio para Gaming" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='images/placeholder-project.png';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Accesorio para Gaming</p>
+                        </div>
+                    </div>
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <!-- REEMPLAZA 'images/proyecto6.jpg' con la URL REAL de tu foto de proyecto 6 -->
+                        <img src="images/proyecto6.jpg" alt="Miniatura de Mascota" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='images/placeholder-project.png';">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Miniatura de Mascota</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="py-20 bg-[#2C3E50] text-white"> <!-- Fondo Azul Oscuro -->
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Un Mercado en Plena Expansión</h2>
+                <p class="text-lg text-gray-300 mb-12 max-w-3xl mx-auto">La impresión 3D no es solo una tecnología fascinante, es un mercado global con un crecimiento exponencial. Al elegirnos, te unes a una revolución.</p>
+                <div class="bg-gray-800 p-8 rounded-lg shadow-xl">
+                    <h3 class="text-2xl font-semibold mb-4 text-orange-400">Proyección del Mercado Global de Impresión 3D (en miles de millones de €)</h3> <!-- Título con Naranja -->
+                    <div class="chart-container">
+                        <canvas id="marketGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="testimonials" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Lo que Dicen Nuestros Clientes</h2>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-sm">
+                        <p class="text-gray-700 italic mb-4">"El proceso fue increíblemente fácil y la comunicación, excelente. La pieza que necesitaba era imposible de encontrar y la replicaron a la perfección. ¡100% recomendado!"</p>
+                        <p class="font-bold text-gray-900">- Alex G.</p>
+                        <p class="text-sm text-orange-600">Cliente de Pieza de Repuesto</p> <!-- Texto de rol con Naranja -->
+                    </div>
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-sm">
+                        <p class="text-gray-700 italic mb-4">"Quería un regalo único para el cumpleaños de mi pareja y la figura personalizada que crearon superó todas mis expectativas. ¡El nivel de detalle es asombroso!"</p>
+                        <p class="font-bold text-gray-900">- María R.</p>
+                        <p class="text-sm text-orange-600">Cliente de Figura Personalizada</p> <!-- Texto de rol con Naranja -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quote" class="py-20 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-lg shadow-xl">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-2">Da Vida a tu Proyecto</h2>
+                    <p class="text-lg text-gray-600 text-center mb-8">Rellena el formulario y recibirás un presupuesto gratuito y sin compromiso en 24-48 horas.</p>
+                    <form id="quote-form" action="https://formspree.io/f/your-formspree-id" method="POST" class="space-y-6">
+                        <!-- ¡IMPORTANTE! Reemplaza 'your-formspree-id' con la URL REAL de tu formulario Formspree. -->
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
+                            <input type="text" id="name" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-2"> <!-- Focus ring Naranja -->
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-2"> <!-- Focus ring Naranja -->
+                        </div>
+                        <div>
+                            <label for="description" class="block text-sm font-medium text-gray-700">Describe tu idea</label>
+                            <textarea id="description" name="description" rows="4" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-2" placeholder="Ej: Necesito una carcasa para mi proyecto de Arduino, una figura de mi personaje de D&D, un soporte para mis auriculares..."></textarea> <!-- Focus ring Naranja -->
+                        </div>
+                        <div>
+                            <label for="file-upload" class="block text-sm font-medium text-gray-700">Sube tus archivos (bocetos, imágenes, .stl, .obj)</label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                <div class="space-y-1 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                    <div class="flex text-sm text-gray-600">
+                                        <label for="file-upload-input" class="relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500"> <!-- Enlace de subir archivo Naranja -->
+                                            <span>Sube un archivo</span>
+                                            <input id="file-upload-input" name="file-upload" type="file" class="sr-only">
+                                        </label>
+                                        <p class="pl-1">o arrástralo aquí</p>
+                                    </div>
+                                    <p id="file-name" class="text-xs text-gray-500"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="w-full bg-orange-500 text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                                Solicitar Presupuesto Gratuito
+                            </button>
+                        </div>
+                    </form>
+                    <div id="form-success" class="hidden mt-6 text-center bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+                        <strong class="font-bold">¡Gracias!</strong>
+                        <span class="block sm:inline"> Hemos recibido tu solicitud. Nos pondremos en contacto contigo pronto.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-4">Un Emprendedor Apasionado</h2>
+                        <p class="text-lg text-gray-600 mb-4">¡Hola! Soy el fundador de Studio3D. Como joven emprendedor, mi ambición es convertir tus ideas en objetos tangibles y de alta calidad. Lo que empezó como un hobby con una impresora 3D, hoy es un pequeño taller con 3 impresoras Ender 3 listo para materializar cualquier desafío.</p>
+                        <p class="text-lg text-gray-600">Mi compromiso es ofrecerte un servicio cercano, transparente y de máxima calidad, combinando la versatilidad de la tecnología FDM con una atención al detalle puramente artesanal.</p>
+                    </div>
+                    <div>
+                        <!-- REEMPLAZA 'images/tu_foto_perfil.jpg' con la URL REAL de tu foto de perfil -->
+                        <img src="images/tu_foto_perfil.jpg" alt="Fundador de Studio3D" class="rounded-full shadow-xl mx-auto w-64 h-64 md:w-80 md:h-80 object-cover" onerror="this.onerror=null; this.src='images/placeholder-profile.png';">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#2C3E50] text-white"> <!-- Fondo Azul Oscuro -->
+        <div class="container mx-auto px-6 py-8 text-center">
+            <!-- LOGO FOOTER: Usar la versión clara del logo (texto blanco, 3D naranja) para fondo oscuro -->
+            <a href="#home" class="text-2xl font-bold text-gray-900">
+                <!-- REEMPLAZA 'images/logo_studio_3d_claro.png' con la URL REAL de tu logo claro optimizado en GitHub -->
+                <img src="images/logo_studio_3d_claro.png" alt="Studio3D Logo Claro" class="logo-img" onerror="this.onerror=null; this.src='images/placeholder-logo-light.png';">
+            </a>
+            <p class="mt-2 text-gray-400">Transformando tus Ideas en Realidad 3D.</p>
+            <div class="flex justify-center mt-6">
+                <a href="https://www.instagram.com/studio3d__/" target="_blank" class="text-gray-400 hover:text-white mx-3 transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.01 3.25.046.466.035.787.14 1.06.28.274.14.51.325.753.568s.428.48.568.753c.14.273.245.594.28 1.06.035.466.046.82.046 3.25s-.01 2.784-.046 3.25c-.035.466-.14.787-.28 1.06-.14.274-.325.51-.568.753s-.48.428-.753.568c-.273.14-.594.245-1.06.28-.466.035-.82.046-3.25.046s-2.784-.01-3.25-.046c-.466-.035-.787-.14-1.06-.28-.274.14-.51-.325-.753-.568s-.428-.48-.568-.753c-.14-.273-.245-.594-.28-1.06-.035-.466-.046-.82-.046-3.25s.01-2.784.046-3.25c.035-.466.14-.787.28-1.06.14-.274.325-.51.568-.753s.48-.428.753-.568c.273-.14.594-.245-1.06.28.466.035.82.046 3.25.046zM8.29 12a3.71 3.71 0 117.42 0 3.71 3.71 0 01-7.42 0z" clip-rule="evenodd"/><path d="M16.75 8.25a1.25 1.25 0 11-2.5 0 1.25 1.25 0 012.5 0z"/></svg>
+                </a>
+            </div>
+            <p class="mt-6 text-sm text-gray-500">&copy; 2025 Studio3D. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileNavLinks = document.querySelectorAll('#mobile-menu a');
+            const header = document.getElementById('header');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const closeMobileMenu = () => {
+                mobileMenu.classList.add('hidden');
+            }
+
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            document.querySelectorAll('main section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('shadow-lg');
+                } else {
+                    header.classList.remove('shadow-lg');
+                }
+            });
+
+            const ctx = document.getElementById('marketGrowthChart').getContext('2d');
+            const marketGrowthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                    datasets: [{
+                        label: 'Mercado en miles de millones de €',
+                        data: [24, 28.5, 34, 40.5, 48, 57, 70],
+                        backgroundColor: 'rgba(255, 111, 0, 0.2)', /* Naranja con opacidad */
+                        borderColor: 'rgba(255, 111, 0, 1)',     /* Naranja sólido */
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(255, 111, 0, 1)', /* Naranja sólido */
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#d1d5db'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#d1d5db'
+                            },
+                             grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#d1d5db',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const quoteForm = document.getElementById('quote-form');
+            const formSuccessMessage = document.getElementById('form-success');
+            quoteForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // En un entorno real, aquí se enviaría el formulario a Formspree.
+                // Formspree redirigirá o mostrará su propio mensaje de éxito.
+                // Para esta simulación, solo mostramos el mensaje local.
+                formSuccessMessage.classList.remove('hidden');
+                quoteForm.reset();
+                document.getElementById('file-name').textContent = '';
+                setTimeout(() => {
+                    formSuccessMessage.classList.add('hidden');
+                }, 5000);
+            });
+            
+            const fileInput = document.getElementById('file-upload-input');
+            const fileNameDisplay = document.getElementById('file-name');
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileNameDisplay.textContent = this.files[0].name;
+                } else {
+                    fileNameDisplay.textContent = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
