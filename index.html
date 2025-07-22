@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Studio3D - Impresión 3D Personalizada</title>
-    <!-- Favicon: Añadido el logo claro para la pestaña del navegador -->
-    <link rel="icon" href="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_claro.png" type="image/png">
+    <!-- Favicon: Usando el logo oscuro para mejor visibilidad en la pestaña del navegador -->
+    <link rel="icon" href="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_oscuro.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +19,14 @@
     - Business Models: Report Info (Various models like collectibles, prototypes, etc.) -> Goal (Showcase service breadth) -> Viz (Icon-based cards) -> Interaction (Static display) -> Justification (Clear, scannable way to present options) -> Method (HTML/Tailwind/Unicode).
     - How It Works Diagram: Report Info (Typical custom order workflow) -> Goal (Reduce user friction, demystify the process) -> Viz (Numbered step-by-step diagram) -> Interaction (Static) -> Justification (Simplifies a potentially complex process, making it seem easy and accessible) -> Method (HTML/Tailwind/Unicode).
     CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    
+    Website Optimization for All Devices:
+    This website is designed with a "mobile-first" approach using Tailwind CSS, ensuring it adapts seamlessly to various screen sizes (smartphones, tablets, desktops). Key responsive design principles applied include:
+    - Fluid layouts using percentages and responsive utility classes (e.g., `w-full`, `md:grid-cols-2`).
+    - Responsive spacing and typography (`text-lg md:text-xl`).
+    - Flexible images (`w-full h-full object-cover`).
+    - Touch-friendly interactive elements (buttons, links) with adequate padding and hover effects for both mouse and touch.
+    This comprehensive responsiveness enhances user experience, making the site easy to navigate and interact with on any device, which directly contributes to higher engagement and conversion rates for sales.
     -->
     <style>
         body {
@@ -51,9 +59,9 @@
             color: #FF6F00; /* Naranja Vibrante */
             font-weight: 600;
         }
-        /* Estilo para el logo en el encabezado y pie de página */
+        /* Estilo para el logo en el encabezado y pie de página - TAMAÑO AUMENTADO */
         .logo-img {
-            height: 40px; /* Ajusta el tamaño según sea necesario */
+            height: 60px; /* Aumentado de 40px a 60px */
             width: auto;
         }
     </style>
@@ -64,7 +72,7 @@
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
             <!-- LOGO ENCABEZADO: Usar la versión oscura del logo (texto gris/negro, 3D naranja) para fondo blanco/claro -->
             <a href="#home" class="text-2xl font-bold text-gray-900">
-                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_oscuro.png" alt="Studio3D Logo Oscuro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x40/FFFFFF/212121?text=Studio3D_Dark';">
+                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_oscuro.png" alt="Studio3D Logo Oscuro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x60/FFFFFF/212121?text=Studio3D_Dark';">
             </a>
             <nav class="hidden md:flex items-center space-x-6">
                 <a href="#how-it-works" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Cómo Funciona</a>
@@ -145,7 +153,7 @@
                         <p class="text-gray-600">¿Una pieza rota o descatalogada? La diseñamos y fabricamos para extender la vida de tus objetos.</p>
                     </div>
                     <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div class="text-4xl text-orange-500 mb-4">🎨</div> <!-- Icono con Naranja Vibrante -->
+                        <div class="4xl text-orange-500 mb-4">🎨</div> <!-- Icono con Naranja Vibrante -->
                         <h3 class="text-xl font-bold mb-2">Arte y Decoración</h3>
                         <p class="text-gray-600">Crea esculturas, litofanías o elementos decorativos que no encontrarás en ninguna otra parte.</p>
                     </div>
@@ -306,7 +314,7 @@
         <div class="container mx-auto px-6 py-8 text-center">
             <!-- LOGO FOOTER: Usar la versión clara del logo (texto blanco, 3D naranja) para fondo oscuro -->
             <a href="#home" class="text-2xl font-bold text-gray-900">
-                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_claro.png" alt="Studio3D Logo Claro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x40/2C3E50/FFFFFF?text=Studio3D_Light';">
+                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_claro.png" alt="Studio3D Logo Claro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x60/2C3E50/FFFFFF?text=Studio3D_Light';">
             </a>
             <p class="mt-2 text-gray-400">Transformando tus Ideas en Realidad 3D.</p>
             <div class="flex justify-center mt-6">
