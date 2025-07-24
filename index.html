@@ -61,7 +61,7 @@
         }
         /* Estilo para el logo en el encabezado y pie de página - TAMAÑO AUMENTADO Y !important */
         .logo-img {
-            height: 60px !important; /* Aumentado de 40px a 60px y añadido !important */
+            height: 100px !important; /* Aumentado a 100px y añadido !important */
             width: auto;
         }
     </style>
@@ -72,7 +72,7 @@
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
             <!-- LOGO ENCABEZADO: Usar la versión oscura del logo (texto gris/negro, 3D naranja) para fondo blanco/claro -->
             <a href="#home" class="text-2xl font-bold text-gray-900">
-                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_oscuro.png" alt="Studio3D Logo Oscuro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x60/FFFFFF/212121?text=Studio3D_Dark';">
+                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_oscuro.png" alt="Studio3D Logo Oscuro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x100/FFFFFF/212121?text=Studio3D_Dark';">
             </a>
             <nav class="hidden md:flex items-center space-x-6">
                 <a href="#how-it-works" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Cómo Funciona</a>
@@ -143,7 +143,7 @@
                         <p class="text-gray-600">Valida tus diseños con prototipos precisos y funcionales. Ideal para inventores, startups y estudiantes.</p>
                     </div>
                     <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <div class="4xl text-orange-500 mb-4">🗿</div> <!-- Icono con Naranja Vibrante -->
+                        <div class="text-4xl text-orange-500 mb-4">🗿</div> <!-- Icono con Naranja Vibrante -->
                         <h3 class="text-xl font-bold mb-2">Figuras y Coleccionables</h3>
                         <p class="text-gray-600">Inmortaliza tus personajes, mascotas o ideas en figuras detalladas. El regalo perfecto y único.</p>
                     </div>
@@ -249,7 +249,7 @@
                     <h2 class="text-3xl md:text-4xl font-bold text-center mb-2">Da Vida a tu Proyecto</h2>
                     <p class="text-lg text-gray-600 text-center mb-8">Rellena el formulario y recibirás un presupuesto gratuito y sin compromiso en 24-48 horas.</p>
                     <form id="quote-form" action="https://formspree.io/f/your-formspree-id" method="POST" class="space-y-6">
-                        <!-- ¡IMPORTANTE! Reemplaza 'your-formspree-id' con la URL REAL de tu formulario Formspree. -->
+                        <!-- ¡IMPORTANT! Reemplaza 'your-formspree-id' con la URL REAL de tu formulario Formspree. -->
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
                             <input type="text" id="name" name="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 sm:text-sm p-2"> <!-- Focus ring Naranja -->
@@ -312,14 +312,16 @@
 
     <footer class="bg-[#2C3E50] text-white"> <!-- Fondo Azul Oscuro -->
         <div class="container mx-auto px-6 py-8 text-center">
-            <!-- LOGO FOOTER: Usar la versión clara del logo (texto blanco, 3D naranja) para fondo oscuro -->
-            <a href="#home" class="text-2xl font-bold text-gray-900">
-                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_claro.png" alt="Studio3D Logo Claro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x60/2C3E50/FFFFFF?text=Studio3D_Light';">
+            <!-- LOGO FOOTER: Usar la versión clara del logo (texto blanco, 3D naranja) para fondo oscuro y centrado -->
+            <a href="#home" class="text-2xl font-bold text-gray-900 inline-block">
+                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_claro.png" alt="Studio3D Logo Claro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x100/2C3E50/FFFFFF?text=Studio3D_Light';">
             </a>
             <p class="mt-2 text-gray-400">Transformando tus Ideas en Realidad 3D.</p>
             <div class="flex justify-center mt-6">
+                <!-- Enlace de Instagram con el logo SVG de Instagram -->
                 <a href="https://www.instagram.com/studio3d__/" target="_blank" class="text-gray-400 hover:text-white mx-3 transition-colors">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.01 3.25.046.466.035.787.14 1.06.28.274.14.51.325.753.568s.428.48.568.753c.14.273.245.594.28 1.06.035.466.046.82.046 3.25s-.01 2.784-.046 3.25c-.035.466-.14.787-.28 1.06-.14.274-.325.51-.568.753s-.48.428-.753.568c-.273.14-.594.245-1.06.28-.466.035-.82.046-3.25.046s-2.784-.01-3.25-.046c-.466-.035-.787-.14-1.06-.28-.274.14-.51-.325-.753-.568s-.428-.48-.568-.753c-.14-.273-.245-.594-.28-1.06-.035-.466-.046-.82-.046-3.25s.01-2.784.046-3.25c.035-.466.14-.787.28-1.06.14-.274.325-.51.568-.753s.48-.428.753-.568c.273-.14.594-.245-1.06.28.466.035.82.046 3.25.046zM8.29 12a3.71 3.71 0 117.42 0 3.71 3.71 0 01-7.42 0z" clip-rule="evenodd"/><path d="M16.75 8.25a1.25 1.25 0 11-2.5 0 1.25 1.25 0 012.5 0z"/></svg>
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12 0C8.74 0 8.333.014 7.053.072 5.773.132 4.903.328 4.042.668.995 1.979.068 3.924.002 7.053.014 8.333.072 8.74 0 12s.014 3.25.072 4.53c.06 1.28.256 2.15.596 3.012 1.283 3.047 3.228 3.974 6.357 4.042 1.28.06 1.69.072 4.53.072s3.25-.014 4.53-.072c1.28-.06 2.15-.256 3.012-.596 3.047-1.283 3.974-3.228 4.042-6.357.06-1.28.072-1.69.072-4.53s-.014-3.25-.072-4.53c-.06-1.28-.256-2.15-.596-3.012-1.283-3.047-3.228-3.974-6.357-4.042-1.28-.06-1.69-.072-4.53-.072zm0 2.163c2.43 0 2.784.01 3.25.046.466.035.787.14 1.06.28.274.14.51.325.753.568s.428.48.568.753c.14.273.245.594.28 1.06.035.466.046.82.046 3.25s-.01 2.784-.046 3.25c-.035.466-.14.787-.28 1.06-.14.274-.325.51-.568.753s-.48.428-.753.568c-.273.14-.594.245-1.06.28-.466.035-.82.046-3.25.046s-2.784-.01-3.25-.046c-.466-.035-.787-.14-1.06-.28-.274-.14-.51-.325-.753-.568s-.428-.48-.568-.753c-.14-.273-.245-.594-.28-1.06-.035-.466-.046-.82-.046-3.25s.01-2.784.046-3.25c.035-.466.14-.787.28-1.06.14-.274.325-.51.568-.753s.48-.428.753-.568c.273-.14.594-.245-1.06.28.466.035.82.046 3.25.046zM8.29 12a3.71 3.71 0 117.42 0 3.71 3.71 0 01-7.42 0z" clip-rule="evenodd"/><path d="M16.75 8.25a1.25 1.25 0 11-2.5 0 1.25 1.25 0 012.5 0z"/></svg>
                 </a>
             </div>
             <p class="mt-6 text-sm text-gray-500">&copy; 2025 Studio3D. Todos los derechos reservados.</p>
