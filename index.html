@@ -136,14 +136,9 @@
         <section id="home" class="hero-bg h-screen flex items-center justify-center text-white text-center p-6 pt-20">
             <!-- Video de fondo en formato vertical -->
             <!-- 
-                IMPORTANTE: Las URLs de Instagram Reels (https://www.instagram.com/reel/...) NO SE PUEDEN USAR DIRECTAMENTE AQUÍ.
-                Necesitas descargar tus videos de Instagram (en formato .mp4 o .webm)
-                y subirlos a tu propio hosting (ej. tu repositorio de GitHub, un CDN, etc.)
-                para obtener una URL directa al archivo de video.
-                El archivo .MOV puede no ser compatible con todos los navegadores para streaming.
-                Se recomienda convertirlo a .mp4 y usar una URL raw directa.
                 'object-fit: cover' asegura que el video cubra todo el espacio, recortando si es necesario,
                 lo que puede hacer que el contenido del video se vea "cerca" o ampliado dependiendo de su relación de aspecto original.
+                Los videos se cargarán y rotarán dinámicamente con JavaScript.
             -->
             <video id="heroVideo" class="hero-video" autoplay loop muted playsinline preload="auto">
                 <!-- Las fuentes de video se cargarán dinámicamente con JavaScript -->
@@ -221,7 +216,7 @@
                         - 'object-cover': La imagen se escala para cubrir todo el espacio asignado,
                           recortando cualquier parte que no quepa, y se centra automáticamente.
                         Si el sujeto de la imagen no parece centrado, es porque 'object-cover'
-                        centra la imagen *completa* dentro de su caja, no el sujeto específico
+                        centra la imagen *completa* dentro de la caja, no el sujeto específico
                         dentro de la imagen original. Para un centrado perfecto del sujeto,
                         la imagen original debería estar compuesta con el sujeto centrado
                         para esta relación de aspecto.
@@ -517,20 +512,15 @@
             // Lógica para los videos de fondo del hero
             const heroVideo = document.getElementById('heroVideo');
             const videoSources = [
-                "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Aitana%20Tour.MOV",
-                "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Detalle%20Roberto%20Abencerrajes.mp4",
-                "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Video%20Litofania%203D.mp4"
+                "https://videos.pexels.com/video-files/5536489/5536489-uhd_2560_1440_25fps.mp4", // Proceso de impresión 3D
+                "https://videos.pexels.com/video-files/855427/855427-hd_1920_1080_25fps.mp4", // Primer plano impresora 3D
+                "https://videos.pexels.com/video-files/5536489/5536489-uhd_2560_1440_25fps.mp4" // Impresión de objeto (usando el mismo que el primero por ahora)
             ];
             let currentVideoIndex = -1; // Inicializa con -1 para asegurar que el primer video se seleccione aleatoriamente
-            let videoInterval; // Variable para almacenar el ID del intervalo
+            let videoSwitchTimeout; // Variable para almacenar el ID del timeout
 
-            function playNextVideo() {
-                // Limpiar cualquier fuente existente para evitar interrupciones de carga
-                heroVideo.src = ''; 
-                heroVideo.load();
-
+            function playRandomVideo() {
                 let nextIndex;
-                // Asegura que el siguiente video sea diferente al actual, si es posible
                 if (videoSources.length > 1) {
                     do {
                         nextIndex = Math.floor(Math.random() * videoSources.length);
@@ -541,39 +531,48 @@
                 
                 currentVideoIndex = nextIndex;
                 heroVideo.src = videoSources[currentVideoIndex];
-                
-                // Esperar a que el video esté listo para reproducirse antes de intentar play()
-                heroVideo.oncanplaythrough = () => {
-                    heroVideo.play().catch(error => {
-                        console.error("Error al reproducir el video:", error);
-                        // Si hay un error de reproducción (ej. por políticas de autoplay),
-                        // no intentamos el siguiente inmediatamente, el setInterval lo hará.
-                    });
-                };
                 heroVideo.load(); // Carga el nuevo video
+
+                heroVideo.play().then(() => {
+                    // Video started playing successfully, schedule next video based on its duration (or a max of 15s)
+                    clearTimeout(videoSwitchTimeout);
+                    // Schedule next video to play after its duration, or a max of 15s if it's very long
+                    // For simplicity and consistent rotation, let's keep a fixed interval for switching.
+                    videoSwitchTimeout = setTimeout(playRandomVideo, 15000); // Switch after 15 seconds
+                }).catch(error => {
+                    console.error("Error al reproducir el video:", error);
+                    // If autoplay is blocked or other play error, try next video after a shorter delay
+                    clearTimeout(videoSwitchTimeout);
+                    videoSwitchTimeout = setTimeout(playRandomVideo, 5000); // Try next video in 5 seconds
+                });
             }
 
             // Inicia la reproducción del primer video (aleatorio) al cargar la página
-            playNextVideo();
+            playRandomVideo();
 
-            // Cambia el video cada 15 segundos
-            videoInterval = setInterval(playNextVideo, 15000); // 15000 ms = 15 segundos
-
-            // Para manejar posibles errores de carga o reproducción inicial (como respaldo)
-            heroVideo.addEventListener('error', (e) => {
-                console.error("Error en el elemento de video:", e);
-                // Si hay un error, el setInterval intentará el siguiente video.
-                // No necesitamos una lógica adicional aquí para evitar bucles.
+            // Cuando un video termina naturalmente, reproduce el siguiente inmediatamente
+            heroVideo.addEventListener('ended', () => {
+                console.log("Video ended, switching to next.");
+                playRandomVideo();
             });
 
-            // Opcional: Pausar el intervalo si la pestaña no está activa para ahorrar recursos
+            // Maneja errores generales del elemento de video (ej. fuente no encontrada, problemas de decodificación)
+            heroVideo.addEventListener('error', (e) => {
+                console.error("Error en el elemento de video (evento 'error'):", e);
+                // Si hay un error, intenta cambiar al siguiente video después de un breve retraso
+                clearTimeout(videoSwitchTimeout);
+                videoSwitchTimeout = setTimeout(playRandomVideo, 5000);
+            });
+
+            // Opcional: Pausar/reanudar el video y el temporizador cuando la pestaña no está activa
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
-                    clearInterval(videoInterval);
+                    clearTimeout(videoSwitchTimeout);
                     heroVideo.pause();
                 } else {
-                    playNextVideo(); // Reanuda la reproducción y el intervalo
-                    videoInterval = setInterval(playNextVideo, 15000);
+                    heroVideo.play().catch(error => console.error("Error al reanudar video en tab visible:", error));
+                    // Reinicia la rotación de videos al volver a la pestaña
+                    playRandomVideo(); 
                 }
             });
         });
