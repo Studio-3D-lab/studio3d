@@ -142,6 +142,8 @@
                 para obtener una URL directa al archivo de video.
                 El archivo .MOV puede no ser compatible con todos los navegadores para streaming.
                 Se recomienda convertirlo a .mp4 y usar una URL raw directa.
+                'object-fit: cover' asegura que el video cubra todo el espacio, recortando si es necesario,
+                lo que puede hacer que el contenido del video se vea "cerca" o ampliado dependiendo de su relación de aspecto original.
             -->
             <video id="heroVideo" class="hero-video" autoplay loop muted playsinline>
                 <!-- Las fuentes de video se cargarán dinámicamente con JavaScript -->
@@ -519,23 +521,28 @@
                 "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Detalle%20Roberto%20Abencerrajes.mp4",
                 "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Video%20Litofania%203D.mp4"
             ];
-            let currentVideoIndex = 0;
+            let currentVideoIndex = -1; // Inicializa con -1 para asegurar que el primer video se seleccione aleatoriamente
 
             function playNextVideo() {
-                // Selecciona un índice aleatorio que no sea el actual para mayor variedad
                 let nextIndex;
-                do {
-                    nextIndex = Math.floor(Math.random() * videoSources.length);
-                } while (nextIndex === currentVideoIndex && videoSources.length > 1); // Evita repetir si hay más de un video
+                // Asegura que el siguiente video sea diferente al actual, si es posible
+                if (videoSources.length > 1) {
+                    do {
+                        nextIndex = Math.floor(Math.random() * videoSources.length);
+                    } while (nextIndex === currentVideoIndex);
+                } else {
+                    nextIndex = 0; // Si solo hay un video, simplemente lo reproduce
+                }
                 
                 currentVideoIndex = nextIndex;
                 heroVideo.src = videoSources[currentVideoIndex];
                 heroVideo.load(); // Carga el nuevo video
                 heroVideo.play().catch(error => {
                     console.error("Error al reproducir el video:", error);
-                    // Si hay un error al reproducir (ej. por políticas de autoplay), intenta el siguiente
+                    // Si hay un error al reproducir (ej. por políticas de autoplay del navegador), intenta el siguiente
                     if (videoSources.length > 1) {
-                        playNextVideo();
+                        // Evita bucles infinitos si todos los videos fallan
+                        setTimeout(playNextVideo, 1000); // Intenta el siguiente video después de un pequeño retraso
                     }
                 });
             }
@@ -543,10 +550,10 @@
             // Inicia la reproducción del primer video (aleatorio)
             playNextVideo();
 
-            // Cuando el video actual termina, reproduce el siguiente
-            heroVideo.addEventListener('ended', playNextVideo);
+            // Cambia el video cada 10 segundos
+            setInterval(playNextVideo, 10000); // 10000 ms = 10 segundos
 
-            // Para manejar posibles errores de carga o reproducción inicial
+            // Para manejar posibles errores de carga o reproducción inicial (como respaldo)
             heroVideo.addEventListener('error', (e) => {
                 console.error("Error en el elemento de video:", e);
                 // Intenta reproducir el siguiente video si el actual falla
