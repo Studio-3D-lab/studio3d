@@ -34,11 +34,24 @@
             background-color: #f8f9fa;
         }
         .hero-bg {
-            /* Nuevo degradado de azul oscuro para profesionalidad y confianza */
-            /* REEMPLAZA 'images/placeholder-hero.jpg' con la URL REAL de tu imagen de fondo para el hero */
-            background-image: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('images/placeholder-hero.jpg');
+            position: relative; /* Necesario para posicionar el video */
+            overflow: hidden; /* Oculta el desbordamiento del video */
+            /* El degradado se aplicará como un overlay sobre el video */
+            background-image: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8));
             background-size: cover;
             background-position: center;
+        }
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1; /* Envía el video al fondo */
+            transform: translate(-50%, -50%); /* Centra el video */
+            object-fit: cover; /* Asegura que el video cubra el contenedor */
         }
         .chart-container {
             position: relative;
@@ -64,7 +77,7 @@
             height: 120px !important; /* Aumentado a 120px y añadido !important */
             width: auto;
         }
-        /* Estilos para el overlay de video y el botón de play */
+        /* Estilos para el overlay de video y el botón de play en portfolio */
         .video-overlay {
             position: absolute;
             inset: 0;
@@ -93,7 +106,7 @@
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
             <!-- LOGO ENCABEZADO: Usar la versión oscura del logo (texto gris/negro, 3D naranja) para fondo blanco/claro -->
             <a href="#home" class="text-2xl font-bold text-gray-900">
-                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_oscuro.png" alt="Studio3D Logo Oscuro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x120/FFFFFF/212121?text=Studio3D_Dark';">
+                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_oscuro.png" alt="Studio3D Logo Oscuro" class="logo-img">
             </a>
             <nav class="hidden md:flex items-center space-x-6">
                 <a href="#how-it-works" class="nav-link text-gray-600 hover:text-orange-500 transition-colors">Cómo Funciona</a>
@@ -121,7 +134,22 @@
 
     <main>
         <section id="home" class="hero-bg h-screen flex items-center justify-center text-white text-center p-6 pt-20">
-            <div class="max-w-3xl">
+            <!-- Video de fondo en formato vertical -->
+            <!-- 
+                IMPORTANTE: Las URLs de Instagram Reels (https://www.instagram.com/reel/...) NO SE PUEDEN USAR DIRECTAMENTE AQUÍ.
+                Necesitas descargar tus videos de Instagram (en formato .mp4 o .webm)
+                y subirlos a tu propio hosting (ej. tu repositorio de GitHub, un CDN, etc.)
+                para obtener una URL directa al archivo de video.
+                El archivo .MOV puede no ser compatible con todos los navegadores para streaming.
+                Se recomienda convertirlo a .mp4 y usar una URL raw directa.
+            -->
+            <video class="hero-video" autoplay loop muted playsinline>
+                <source src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Aitana%20Tour.MOV" type="video/mp4">
+                <!-- Considera añadir una fuente .webm para mayor compatibilidad: -->
+                <!-- <source src="URL_DE_TU_VIDEO.webm" type="video/webm"> -->
+                Tu navegador no soporta el elemento de video.
+            </video>
+            <div class="relative z-10 max-w-3xl"> <!-- Contenido del hero encima del video -->
                 <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4">Transformamos tus Ideas en Realidad 3D</h1>
                 <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Desde prototipos funcionales hasta figuras personalizadas únicas. Si puedes imaginarlo, podemos imprimirlo.</p>
                 <a href="#quote" class="bg-orange-500 text-white px-8 py-3 rounded-md font-bold text-lg hover:bg-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
@@ -186,77 +214,59 @@
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Proyectos que Cobraron Vida</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 
+                        Nota sobre el centrado de imágenes en el portafolio:
+                        Las imágenes usan 'w-full h-80 object-cover'. Esto significa que:
+                        - 'w-full': La imagen ocupa el 100% del ancho de su contenedor.
+                        - 'h-80': La imagen tiene una altura fija de 320px.
+                        - 'object-cover': La imagen se escala para cubrir todo el espacio asignado,
+                          recortando cualquier parte que no quepa, y se centra automáticamente.
+                        Si el sujeto de la imagen no parece centrado, es porque 'object-cover'
+                        centra la imagen *completa* dentro de su caja, no el sujeto específico
+                        dentro de la imagen original. Para un centrado perfecto del sujeto,
+                        la imagen original debería estar compuesta con el sujeto centrado
+                        para esta relación de aspecto.
+                    -->
                     <!-- Proyecto 1: Imagen - Copa del Mundo -->
                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Copa%20del%20Mundo.jpg" alt="Réplica de la Copa del Mundo impresa en 3D" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/374151/FFFFFF?text=Copa+del+Mundo';">
+                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Copa%20del%20Mundo.jpg" alt="Réplica de la Copa del Mundo impresa en 3D" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <p class="text-white text-lg font-semibold">Réplica de la Copa del Mundo</p>
                         </div>
                     </div>
-                    <!-- Proyecto 2: Video (Placeholder) -->
+                    <!-- Proyecto 2: Imagen - Litofania 3D -->
                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <video class="w-full h-full object-cover" loop muted playsinline poster="https://placehold.co/600x400/4B5563/FFFFFF?text=Video+Impresion+3D">
-                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                            Tu navegador no soporta el elemento de video.
-                        </video>
-                        <div class="video-overlay">
-                            <svg class="play-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <p class="text-white text-lg font-semibold">Video de Proceso de Impresión</p>
-                        </div>
-                    </div>
-                    <!-- Proyecto 3: Imagen - Litofania 3D -->
-                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Litofania%203D.jpg" alt="Litofanía 3D personalizada" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/6B7280/FFFFFF?text=Litofania+3D';">
+                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Litofania%203D.jpg" alt="Litofanía 3D personalizada" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <p class="text-white text-lg font-semibold">Litofanía 3D Personalizada</p>
                         </div>
                     </div>
-                    <!-- Proyecto 4: Video (Placeholder) -->
-                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <video class="w-full h-full object-cover" loop muted playsinline poster="https://placehold.co/600x400/4338CA/FFFFFF?text=Video+Proceso+2">
-                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                            Tu navegador no soporta el elemento de video.
-                        </video>
-                        <div class="video-overlay">
-                            <svg class="play-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <p class="text-white text-lg font-semibold">Video de Diseño y Prototipado</p>
-                        </div>
-                    </div>
-                    <!-- Proyecto 5: Imagen - Medallas Atika -->
+                    <!-- Proyecto 3: Imagen - Medallas Atika -->
                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Medallas%20Atika.jpg" alt="Medallas Atika impresas en 3D" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/312E81/FFFFFF?text=Medallas+Atika';">
+                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Medallas%20Atika.jpg" alt="Medallas Atika impresas en 3D" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <p class="text-white text-lg font-semibold">Medallas Personalizadas Atika</p>
                         </div>
                     </div>
-                    <!-- Proyecto 6: Video (Placeholder) -->
+                    <!-- Proyecto 4: Imagen - Prototipo Orinal -->
                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <video class="w-full h-full object-cover" loop muted playsinline poster="https://placehold.co/600x400/4F46E5/FFFFFF?text=Video+Producto">
-                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                            Tu navegador no soporta el elemento de video.
-                        </video>
-                        <div class="video-overlay">
-                            <svg class="play-icon" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                        </div>
-                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <p class="text-white text-lg font-semibold">Video de Producto Terminado</p>
-                        </div>
-                    </div>
-                    <!-- Proyecto 7: Imagen - Prototipo Orinal (Nuevo) -->
-                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Prototipo%20Orinal.jpg" alt="Prototipo de orinal impreso en 3D" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null; this.src='https://placehold.co/600x400/8D6E63/FFFFFF?text=Prototipo+Orinal';">
+                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Prototipo%20Orinal.jpg" alt="Prototipo de orinal impreso en 3D" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <p class="text-white text-lg font-semibold">Prototipo de Orinal</p>
+                        </div>
+                    </div>
+                    <!-- Proyecto 5: Imagen - Llaveros Personalizados (ACTUALIZADO) -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Llaveros%20Personalizados.png" alt="Llaveros personalizados impresos en 3D" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Llaveros Personalizados</p>
+                        </div>
+                    </div>
+                    <!-- Proyecto 6: Imagen - Prototipo de Dron (Ejemplo existente, para mantener 6) -->
+                    <div class="group relative overflow-hidden rounded-lg shadow-lg">
+                        <img src="images/proyecto1.jpg" alt="Prototipo de Dron" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p class="text-white text-lg font-semibold">Prototipo de Dron</p>
                         </div>
                     </div>
                 </div>
@@ -353,7 +363,7 @@
                     </div>
                     <div>
                         <!-- FOTO DE PERFIL: Usando la URL 'raw' de GitHub -->
-                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/mi_foto_perfil.png" alt="Equipo de Studio3D" class="rounded-full shadow-xl mx-auto w-64 h-64 md:w-80 md:h-80 object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x600/FEE7D7/FF6F00?text=Tu+Foto';">
+                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/mi_foto_perfil.png" alt="Equipo de Studio3D" class="rounded-full shadow-xl mx-auto w-64 h-64 md:w-80 md:h-80 object-cover">
                     </div>
                 </div>
             </div>
@@ -366,7 +376,7 @@
             <!-- LOGO FOOTER: Usar la versión clara del logo (texto blanco, 3D naranja) para fondo oscuro y centrado -->
             <!-- Se ha añadido flexbox al <a> para centrar la imagen perfectamente -->
             <a href="#home" class="text-2xl font-bold text-gray-900 flex justify-center items-center mx-auto">
-                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_claro.png" alt="Studio3D Logo Claro" class="logo-img" onerror="this.onerror=null; this.src='https://placehold.co/150x120/2C3E50/FFFFFF?text=Studio3D_Light';">
+                <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Logo_Studio_3D_claro.png" alt="Studio3D Logo Claro" class="logo-img">
             </a>
             <p class="mt-2 text-gray-400">Transformando tus Ideas en Realidad 3D.</p>
             <div class="flex justify-center mt-6">
