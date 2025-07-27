@@ -145,7 +145,7 @@
                 'object-fit: cover' asegura que el video cubra todo el espacio, recortando si es necesario,
                 lo que puede hacer que el contenido del video se vea "cerca" o ampliado dependiendo de su relación de aspecto original.
             -->
-            <video id="heroVideo" class="hero-video" autoplay loop muted playsinline>
+            <video id="heroVideo" class="hero-video" autoplay loop muted playsinline preload="auto">
                 <!-- Las fuentes de video se cargarán dinámicamente con JavaScript -->
             </video>
             <div class="relative z-10 max-w-3xl"> <!-- Contenido del hero encima del video -->
@@ -522,8 +522,13 @@
                 "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Video%20Litofania%203D.mp4"
             ];
             let currentVideoIndex = -1; // Inicializa con -1 para asegurar que el primer video se seleccione aleatoriamente
+            let videoInterval; // Variable para almacenar el ID del intervalo
 
             function playNextVideo() {
+                // Limpiar cualquier fuente existente para evitar interrupciones de carga
+                heroVideo.src = ''; 
+                heroVideo.load();
+
                 let nextIndex;
                 // Asegura que el siguiente video sea diferente al actual, si es posible
                 if (videoSources.length > 1) {
@@ -536,29 +541,39 @@
                 
                 currentVideoIndex = nextIndex;
                 heroVideo.src = videoSources[currentVideoIndex];
+                
+                // Esperar a que el video esté listo para reproducirse antes de intentar play()
+                heroVideo.oncanplaythrough = () => {
+                    heroVideo.play().catch(error => {
+                        console.error("Error al reproducir el video:", error);
+                        // Si hay un error de reproducción (ej. por políticas de autoplay),
+                        // no intentamos el siguiente inmediatamente, el setInterval lo hará.
+                    });
+                };
                 heroVideo.load(); // Carga el nuevo video
-                heroVideo.play().catch(error => {
-                    console.error("Error al reproducir el video:", error);
-                    // Si hay un error al reproducir (ej. por políticas de autoplay del navegador), intenta el siguiente
-                    if (videoSources.length > 1) {
-                        // Evita bucles infinitos si todos los videos fallan
-                        setTimeout(playNextVideo, 1000); // Intenta el siguiente video después de un pequeño retraso
-                    }
-                });
             }
 
-            // Inicia la reproducción del primer video (aleatorio)
+            // Inicia la reproducción del primer video (aleatorio) al cargar la página
             playNextVideo();
 
-            // Cambia el video cada 10 segundos
-            setInterval(playNextVideo, 10000); // 10000 ms = 10 segundos
+            // Cambia el video cada 15 segundos
+            videoInterval = setInterval(playNextVideo, 15000); // 15000 ms = 15 segundos
 
             // Para manejar posibles errores de carga o reproducción inicial (como respaldo)
             heroVideo.addEventListener('error', (e) => {
                 console.error("Error en el elemento de video:", e);
-                // Intenta reproducir el siguiente video si el actual falla
-                if (videoSources.length > 1) {
-                    playNextVideo();
+                // Si hay un error, el setInterval intentará el siguiente video.
+                // No necesitamos una lógica adicional aquí para evitar bucles.
+            });
+
+            // Opcional: Pausar el intervalo si la pestaña no está activa para ahorrar recursos
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(videoInterval);
+                    heroVideo.pause();
+                } else {
+                    playNextVideo(); // Reanuda la reproducción y el intervalo
+                    videoInterval = setInterval(playNextVideo, 15000);
                 }
             });
         });
