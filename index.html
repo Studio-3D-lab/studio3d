@@ -143,11 +143,8 @@
                 El archivo .MOV puede no ser compatible con todos los navegadores para streaming.
                 Se recomienda convertirlo a .mp4 y usar una URL raw directa.
             -->
-            <video class="hero-video" autoplay loop muted playsinline>
-                <source src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Aitana%20Tour.MOV" type="video/mp4">
-                <!-- Considera añadir una fuente .webm para mayor compatibilidad: -->
-                <!-- <source src="URL_DE_TU_VIDEO.webm" type="video/webm"> -->
-                Tu navegador no soporta el elemento de video.
+            <video id="heroVideo" class="hero-video" autoplay loop muted playsinline>
+                <!-- Las fuentes de video se cargarán dinámicamente con JavaScript -->
             </video>
             <div class="relative z-10 max-w-3xl"> <!-- Contenido del hero encima del video -->
                 <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4">Transformamos tus Ideas en Realidad 3D</h1>
@@ -255,18 +252,18 @@
                             <p class="text-white text-lg font-semibold">Prototipo de Orinal</p>
                         </div>
                     </div>
-                    <!-- Proyecto 5: Imagen - Llaveros Personalizados (ACTUALIZADO) -->
+                    <!-- Proyecto 5: Imagen - Llaveros Personalizados -->
                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
                         <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Llaveros%20Personalizados.png" alt="Llaveros personalizados impresos en 3D" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <p class="text-white text-lg font-semibold">Llaveros Personalizados</p>
                         </div>
                     </div>
-                    <!-- Proyecto 6: Imagen - Prototipo de Dron (Ejemplo existente, para mantener 6) -->
+                    <!-- Proyecto 6: Imagen - Rejilla Aire Coche (NUEVO) -->
                     <div class="group relative overflow-hidden rounded-lg shadow-lg">
-                        <img src="images/proyecto1.jpg" alt="Prototipo de Dron" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Rejilla%20Aire%20Coche.png" alt="Rejilla de aire para coche impresa en 3D" class="w-full h-80 object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <p class="text-white text-lg font-semibold">Prototipo de Dron</p>
+                            <p class="text-white text-lg font-semibold">Rejilla de Aire para Coche</p>
                         </div>
                     </div>
                 </div>
@@ -512,6 +509,49 @@
                     fileNameDisplay.textContent = this.files[0].name;
                 } else {
                     fileNameDisplay.textContent = '';
+                }
+            });
+
+            // Lógica para los videos de fondo del hero
+            const heroVideo = document.getElementById('heroVideo');
+            const videoSources = [
+                "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Aitana%20Tour.MOV",
+                "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Detalle%20Roberto%20Abencerrajes.mp4",
+                "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/Video%20Litofania%203D.mp4"
+            ];
+            let currentVideoIndex = 0;
+
+            function playNextVideo() {
+                // Selecciona un índice aleatorio que no sea el actual para mayor variedad
+                let nextIndex;
+                do {
+                    nextIndex = Math.floor(Math.random() * videoSources.length);
+                } while (nextIndex === currentVideoIndex && videoSources.length > 1); // Evita repetir si hay más de un video
+                
+                currentVideoIndex = nextIndex;
+                heroVideo.src = videoSources[currentVideoIndex];
+                heroVideo.load(); // Carga el nuevo video
+                heroVideo.play().catch(error => {
+                    console.error("Error al reproducir el video:", error);
+                    // Si hay un error al reproducir (ej. por políticas de autoplay), intenta el siguiente
+                    if (videoSources.length > 1) {
+                        playNextVideo();
+                    }
+                });
+            }
+
+            // Inicia la reproducción del primer video (aleatorio)
+            playNextVideo();
+
+            // Cuando el video actual termina, reproduce el siguiente
+            heroVideo.addEventListener('ended', playNextVideo);
+
+            // Para manejar posibles errores de carga o reproducción inicial
+            heroVideo.addEventListener('error', (e) => {
+                console.error("Error en el elemento de video:", e);
+                // Intenta reproducir el siguiente video si el actual falla
+                if (videoSources.length > 1) {
+                    playNextVideo();
                 }
             });
         });
