@@ -139,9 +139,14 @@
                 'object-fit: cover' asegura que el video cubra todo el espacio, recortando si es necesario,
                 lo que puede hacer que el contenido del video se vea "cerca" o ampliado dependiendo de su relación de aspecto original.
                 Los videos se cargarán y rotarán dinámicamente con JavaScript.
+                Se han restaurado las URLs de los videos de GitHub para mayor fiabilidad.
             -->
             <video id="heroVideo" class="hero-video" autoplay loop muted playsinline preload="auto">
                 <!-- Las fuentes de video se cargarán dinámicamente con JavaScript -->
+                <!-- Se añaden fuentes explícitas para ayudar al navegador a identificar el tipo de video -->
+                <source src="" type="video/mp4">
+                <source src="" type="video/webm">
+                Tu navegador no soporta el elemento de video.
             </video>
             <div class="relative z-10 max-w-3xl"> <!-- Contenido del hero encima del video -->
                 <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4">Transformamos tus Ideas en Realidad 3D</h1>
@@ -511,70 +516,68 @@
 
             // Lógica para los videos de fondo del hero
             const heroVideo = document.getElementById('heroVideo');
+            // Se han añadido los dos videos facilitados por el usuario
             const videoSources = [
-                "https://videos.pexels.com/video-files/5536489/5536489-uhd_2560_1440_25fps.mp4", // Proceso de impresión 3D
-                "https://videos.pexels.com/video-files/855427/855427-hd_1920_1080_25fps.mp4", // Primer plano impresora 3D
-                "https://videos.pexels.com/video-files/5536489/5536489-uhd_2560_1440_25fps.mp4" // Impresión de objeto (usando el mismo que el primero por ahora)
+                { src: "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/ender%203%20de%20cerca.mp4", type: "video/mp4" },
+                { src: "https://raw.githubusercontent.com/Studio-3D-lab/studio3d/main/images/impresion%203d%20ender%203.mp4", type: "video/mp4" }
             ];
-            let currentVideoIndex = -1; // Inicializa con -1 para asegurar que el primer video se seleccione aleatoriamente
-            let videoSwitchTimeout; // Variable para almacenar el ID del timeout
+            let currentVideoIndex = 0; // Inicia en el primer video
 
-            function playRandomVideo() {
-                let nextIndex;
-                if (videoSources.length > 1) {
-                    do {
-                        nextIndex = Math.floor(Math.random() * videoSources.length);
-                    } while (nextIndex === currentVideoIndex);
-                } else {
-                    nextIndex = 0; // Si solo hay un video, simplemente lo reproduce
+            function playNextVideoInPlaylist() {
+                // Limpiar cualquier fuente existente para evitar interrupciones de carga
+                while (heroVideo.firstChild) {
+                    heroVideo.removeChild(heroVideo.firstChild);
                 }
+
+                const sourceElement = document.createElement('source');
+                sourceElement.src = videoSources[currentVideoIndex].src;
+                sourceElement.type = videoSources[currentVideoIndex].type;
+                heroVideo.appendChild(sourceElement);
                 
-                currentVideoIndex = nextIndex;
-                heroVideo.src = videoSources[currentVideoIndex];
                 heroVideo.load(); // Carga el nuevo video
 
                 heroVideo.play().then(() => {
-                    // Video started playing successfully, schedule next video based on its duration (or a max of 15s)
-                    clearTimeout(videoSwitchTimeout);
-                    // Schedule next video to play after its duration, or a max of 15s if it's very long
-                    // For simplicity and consistent rotation, let's keep a fixed interval for switching.
-                    videoSwitchTimeout = setTimeout(playRandomVideo, 15000); // Switch after 15 seconds
+                    console.log(`Reproduciendo video: ${videoSources[currentVideoIndex].src}`);
                 }).catch(error => {
                     console.error("Error al reproducir el video:", error);
-                    // If autoplay is blocked or other play error, try next video after a shorter delay
-                    clearTimeout(videoSwitchTimeout);
-                    videoSwitchTimeout = setTimeout(playRandomVideo, 5000); // Try next video in 5 seconds
+                    // Si el autoplay es bloqueado o hay otro error de reproducción,
+                    // intentamos el siguiente video después de un breve retraso.
+                    // Esto es útil si un video específico tiene problemas.
+                    setTimeout(() => {
+                        currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+                        playNextVideoInPlaylist();
+                    }, 2000); // Intentar el siguiente video en 2 segundos
                 });
             }
 
-            // Inicia la reproducción del primer video (aleatorio) al cargar la página
-            playRandomVideo();
-
             // Cuando un video termina naturalmente, reproduce el siguiente inmediatamente
             heroVideo.addEventListener('ended', () => {
-                console.log("Video ended, switching to next.");
-                playRandomVideo();
+                console.log("Video terminado, pasando al siguiente.");
+                currentVideoIndex = (currentVideoIndex + 1) % videoSources.length; // Avanza al siguiente video, o vuelve al inicio
+                playNextVideoInPlaylist();
             });
 
             // Maneja errores generales del elemento de video (ej. fuente no encontrada, problemas de decodificación)
             heroVideo.addEventListener('error', (e) => {
                 console.error("Error en el elemento de video (evento 'error'):", e);
                 // Si hay un error, intenta cambiar al siguiente video después de un breve retraso
-                clearTimeout(videoSwitchTimeout);
-                videoSwitchTimeout = setTimeout(playRandomVideo, 5000);
+                setTimeout(() => {
+                    currentVideoIndex = (currentVideoIndex + 1) % videoSources.length;
+                    playNextVideoInPlaylist();
+                }, 2000);
             });
 
-            // Opcional: Pausar/reanudar el video y el temporizador cuando la pestaña no está activa
+            // Opcional: Pausar/reanudar el video cuando la pestaña no está activa
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) {
-                    clearTimeout(videoSwitchTimeout);
                     heroVideo.pause();
                 } else {
                     heroVideo.play().catch(error => console.error("Error al reanudar video en tab visible:", error));
-                    // Reinicia la rotación de videos al volver a la pestaña
-                    playRandomVideo(); 
                 }
             });
+
+            // Inicia la reproducción del primer video al cargar la página
+            playNextVideoInPlaylist();
         });
     </script>
 </body>
